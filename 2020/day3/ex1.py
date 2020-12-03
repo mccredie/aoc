@@ -31,6 +31,7 @@ class TreeMap:
                     the_map.add_tree((j, i))
         return the_map
 
+
 def add_points(*args):
     return tuple(sum(points) for points in zip(*args))
 
@@ -47,10 +48,10 @@ def traverse(trees, direction):
     return trees_hit
 
 
-
 def main():
     trees = TreeMap.from_lines(line.strip() for line in sys.stdin)
     print(traverse(trees, (3, 1)))
+
 
 if __name__ == "__main__":
     main()
