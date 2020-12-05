@@ -15,20 +15,20 @@
 (defn row-part [boarding-pass]
   (subs boarding-pass 0 7))
 
-(defn row-value [row-part]
+(defn to-binary [zero-val one-val value]
   (reduce
     (fn [a b] (+ (* 2 a) b))
     0
-    (map (fn [c] (if (= c \F) 0 1)) row-part)))
+    (map {zero-val 0 one-val 1} value)))
+
+(defn row-value [row-part]
+  (to-binary \F \B row-part))
 
 (defn col-part [boarding-pass]
   (subs boarding-pass 7 10))
 
 (defn col-value [col-part]
-  (reduce
-    (fn [a b] (+ (* 2 a) b))
-    0
-    (map (fn [c] (if (= c \L) 0 1)) col-part)))
+  (to-binary \L \R col-part))
 
 (defn col-id [boarding-pass]
     (->>
@@ -49,7 +49,7 @@
 
 
 (defn empty-seats [seats]
-  (reduce disj (set (range 1023)) seats))
+  (reduce disj (set (range 1024)) seats))
 
 (defn find-loner [seats]
   (->>
