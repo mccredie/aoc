@@ -1,5 +1,14 @@
 (ns day5)
 
+(declare seat-id find-loner read-input)
+
+(defn ex1 [opts]
+  (println (reduce max (map seat-id (read-input)))))
+
+(defn ex2 [opts]
+  (println (find-loner (set (map seat-id (read-input))))))
+
+
 (defn read-input []
   (line-seq (java.io.BufferedReader. *in*)))
 
@@ -38,8 +47,6 @@
     (* 8 (row-id boarding-pass))
     (col-id  boarding-pass)))
 
-(defn ex1 [opts]
-  (println (reduce max (map seat-id (read-input)))))
 
 (defn empty-seats [seats]
   (reduce disj (set (range 1023)) seats))
@@ -47,12 +54,11 @@
 (defn find-loner [seats]
   (->>
     (empty-seats seats)
-    (filter (fn [seat] (and (contains? seats (inc seat)) (contains? seats (dec seat)))))
-    (first)
-  ))
+    (filter (fn [seat] (and
+                         (contains? seats (inc seat))
+                         (contains? seats (dec seat)))))
+    (first)))
 
-(defn ex2 [opts]
-  (println (find-loner (set (map seat-id (read-input))))))
 
 
 
