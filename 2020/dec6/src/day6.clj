@@ -3,6 +3,8 @@
 
 (declare read-input)
 
+(def questions (set "abcdefghijklmnopqrstuvwxyz"))
+
 (defn get-groups-any [lines]
   (let [[groups lastgroup]
         (reduce
@@ -24,9 +26,9 @@
           (fn
             [[groups current] row]
             (if (empty? row)
-              [(conj groups current) (set "abcdefghijklmnopqrstuvwxyz")]
+              [(conj groups current) questions]
               [groups (cset/intersection current (set row))]))
-          [[] (set "abcdefghijklmnopqrstuvwxyz")]
+          [[] questions]
           lines)]
     (conj groups lastgroup)))
 
