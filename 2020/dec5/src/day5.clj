@@ -58,8 +58,3 @@
                          (contains? seats (inc seat))
                          (contains? seats (dec seat)))))
     (first)))
-
-
-
-
-
