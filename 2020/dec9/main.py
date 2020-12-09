@@ -1,15 +1,21 @@
 import sys
+from collections import defaultdict
 
 def read_input():
     return [int(line.strip()) for line in sys.stdin]
 
 def find_oddball(seq, prefix):
     not_found = set()
+    searching = defaultdict(set)
     for i, x in enumerate(seq[:len(seq) - prefix]):
-        not_found.add(seq[prefix + i])
+        vi = i + prefix
+        v = seq[vi]
+        searching[v].add(vi)
+        not_found.add(prefix + i)
         for y in seq[i + 1: i + prefix]:
-            not_found.discard(x + y)
-        if i >= prefix and seq[i] in not_found:
+            if x != y:
+                not_found.difference_update(searching[x + y])
+        if i in not_found:
             return seq[i]
 
 def find_weakness(seq, target):
