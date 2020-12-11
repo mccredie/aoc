@@ -103,11 +103,9 @@
         (for [sight sights]
           (occupied (first sight)))))))
 
-
 (defn will-be-occupied-sight? [seat occupied directions]
   (let [is-occupied (occupied seat)
         adjacent-count (count-occupied-by-sight seat occupied directions)]
-    ;(println "adjacent " adjacent-count " is-occupied" is-occupied)
     (if (and (not is-occupied ) (zero? adjacent-count))
       true
       (if (and is-occupied (<= 5 adjacent-count))
@@ -131,6 +129,3 @@
         seats (parse-seats lines)
         directions (lines-of-sight [cols rows] seats)]
     (println (count (run-til-stable-sight seats directions)))))
-
-(defn test-dirs [opts]
-  (println (map #(% [5 5]) (lines-of-sight [10 10] any?))))
