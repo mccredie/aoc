@@ -9,7 +9,6 @@ def read_input():
 
 def get_bus_schedule(lines):
     sched_line = list(lines)[1]
-    schedule = []
     for i, id_str in enumerate(sched_line.split(',')):
         if id_str != 'x':
             yield i, int(id_str)
@@ -17,21 +16,21 @@ def get_bus_schedule(lines):
 def meet_schedule(t, y, offset):
     return (t + offset) % y == 0
 
-def find_n(t, x, y, k):
+def find_t(t0, x, y, k):
     for n in count():
-        if meet_schedule(t + n * x, y, k):
-            return n
+        t = t0 + n * x
+        if meet_schedule(t, y, k):
+            return t
 
-def find_t(schedule):
+def main():
+    schedule = get_bus_schedule(read_input())
     x = 1
     t = 0
     for offset, y in schedule:
-        t += find_n(t, x, y, offset) * x
+        t = find_t(t, x, y, offset)
         x *= y
-    return t
 
-def main():
-    print(find_schedule(get_bus_schedule(read_input())))
+    print(t)
 
 
 if __name__ == "__main__":
