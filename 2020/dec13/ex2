@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+
+import sys
+from itertools import count
+
+def read_input():
+    for line in sys.stdin:
+        yield line.strip()
+
+def get_bus_schedule(lines):
+    sched_line = list(lines)[1]
+    schedule = []
+    for i, id_str in enumerate(sched_line.split(',')):
+        if id_str != 'x':
+            yield i, int(id_str)
+
+def meet_schedule(t, y, offset):
+    return (t + offset) % y == 0
+
+def find_n(t, x, y, k):
+    for n in count():
+        if meet_schedule(t + n * x, y, k):
+            return n
+
+def find_t(schedule):
+    x = 1
+    t = 0
+    for offset, y in schedule:
+        t += find_n(t, x, y, offset) * x
+        x *= y
+    return t
+
+def main():
+    print(find_schedule(get_bus_schedule(read_input())))
+
+
+if __name__ == "__main__":
+    main()

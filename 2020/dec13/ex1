@@ -1,0 +1,37 @@
+#!/usr/bin/env python3
+
+import sys
+
+def read_input():
+    for line in sys.stdin:
+        yield line.strip()
+
+def get_bus_schedule(lines):
+    lines = iter(lines)
+    start = int(next(lines))
+    schedules = []
+    for id in next(lines).split(','):
+        try:
+            schedules.append(int(id))
+        except ValueError:
+            pass
+    return start, schedules
+
+def wait_time_from(start, id):
+    return id - start % id
+
+def wait_time_getter(start):
+    def wait_time(id):
+        return wait_time_from(start, id)
+    return wait_time
+
+def main():
+    start, schedule = get_bus_schedule(read_input())
+    wait_time = wait_time_getter(start)
+    id = min(schedule, key=wait_time)
+
+    print(wait_time(id) * id)
+
+
+if __name__ == "__main__":
+    main()
