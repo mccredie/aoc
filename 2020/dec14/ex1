@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+
+import sys
+import re
+
+re_assignment = re.compile(r"(?P<register>[^ ]+) = (?P<value>[0-9X]+)")
+re_address = re.compile(r"mem\[(?P<address>\d+)\]")
+
+class Computer:
+  def __init__(self):
+    self._mem = {}
+    self._ones = 0
+    self._zeros = 0xfffffffff
+
+  def mem(self, address, value):
+    self._mem[address] = (value & self._zeros) | self._ones
+
+  def mask(self, mask_str):
+    ones = 0
+    zeros = 0
+    for c in mask_str:
+      ones *= 2
+      zeros *= 2
+      if c == 'X':
+        zeros += 1
+      elif c == '1':
+        ones += 1
+        zeros += 1
+    self._ones = ones
+    self._zeros = zeros
+
+  def sum_memory(self):
+    return sum(self._mem.values())
+
+def read_input():
+  for line in sys.stdin:
+      yield line.strip()
+
+def iter_operations(lines):
+  for line in lines:
+    match = re_assignment.match(line)
+    # if it doesn't match, something is wrong with the input
+    register = match.group("register")
+    value = match.group("value")
+    if match := re_address.match(register):
+      yield "mem", match.group("address"), int(value)
+    else:
+      yield "mask", value
+
+def main():
+  comp = Computer()
+  for name, *args in iter_operations(read_input()):
+    getattr(comp, name)(*args)
+
+  print(comp.sum_memory())
+
+if __name__ == "__main__":
+    main()

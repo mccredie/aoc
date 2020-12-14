@@ -1,0 +1,115 @@
+#!/usr/bin/env python3
+
+import sys
+import re
+
+re_assignment = re.compile(r"^(?P<register>[^ ]+) = (?P<value>[0-9X]+)$")
+re_address = re.compile(r"mem\[(?P<address>\d+)\]")
+
+
+def addresses_overlap(a, b):
+    for x, y in zip(a, b):
+        if x == 'X' or y == 'X' or x == y:
+            continue
+        return False
+    return True
+
+def should_split(a, b):
+    "return True if some addresses in b are not in a"
+    for x, y in zip(a, b):
+        if x != y and y == 'X':
+            return True
+    return False
+
+
+INVERSE = {
+    '0': '1',
+    '1': '0',
+}
+
+
+def subtract_addresses(a, b):
+    """Yields addresses in b that don't overlap with a."""
+    new_b = list(b)
+    for i, (abit, bbit) in enumerate(zip(a, b)):
+        if abit != bbit and bbit == 'X':
+            new_b[i] = INVERSE[abit]
+            yield "".join(new_b)
+            new_b[i] = abit
+
+
+def bits(address):
+    b = []
+    while address:
+        if address & 1:
+            b.append('1')
+        else:
+            b.append('0')
+        address //= 2
+    yield from '0' * (36 - len(b))
+    yield from reversed(b)
+
+def apply_mask(mask, address):
+    masked = []
+    for m, a in zip(mask, bits(address)):
+        if m == 'X':
+            masked.append('X')
+        elif m == '0':
+            masked.append(a)
+        else:
+            masked.append('1')
+    return ''.join(masked)
+
+
+class Computer:
+  def __init__(self):
+    self._mem = {}
+    self._mask = '0' * 36
+
+  def mem(self, assign, new_value):
+      assign = apply_mask(self._mask, assign)
+      to_delete = []
+      assignments = {assign: new_value}
+      for addr, value in self._mem.items():
+          if addresses_overlap(assign, addr):
+              to_delete.append(addr)
+              for addr in subtract_addresses(assign, addr):
+                  assignments[addr] = value
+      for addr in to_delete:
+          del self._mem[addr]
+      self._mem.update(assignments)
+
+  def mask(self, mask_str):
+      self._mask = mask_str
+
+  def sum_memory(self):
+      total = 0
+      for key, value in self._mem.items():
+          total += value * 2 ** key.count('X')
+      return total
+
+def read_input():
+  for line in sys.stdin:
+      yield line.strip()
+
+def iter_operations(lines):
+  for line in lines:
+    match = re_assignment.match(line)
+    # if it doesn't match, something is wrong with the input
+    register = match.group("register")
+    value = match.group("value")
+    if match := re_address.match(register):
+      yield "mem", int(match.group("address")), int(value)
+    else:
+      yield "mask", value
+
+def main():
+  comp = Computer()
+  for name, *args in iter_operations(read_input()):
+    getattr(comp, name)(*args)
+
+  print(comp.sum_memory())
+
+if __name__ == "__main__":
+    main()
+
