@@ -17,8 +17,8 @@ def meet_schedule(t, y, offset):
     return (t + offset) % y == 0
 
 def find_t(t0, x, y, k):
-    for n in count():
-        t = t0 + n * x
+    for dt in count(step=x):
+        t = t0 + dt
         if meet_schedule(t, y, k):
             return t
 
