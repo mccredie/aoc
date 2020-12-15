@@ -7,7 +7,7 @@
 (defn parse-input [line]
   (map #(Integer/parseInt %) (str/split line #",")))
 
-(defn next-game-seq [last-seen, index, value]
+(defn next-game-seq [last-seen index value]
   (cons value (lazy-seq (next-game-seq
                           (assoc last-seen value index)
                           (inc index)
