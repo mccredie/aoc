@@ -4,7 +4,7 @@
 (defn read-input []
   (line-seq (java.io.BufferedReader. *in*)))
 
-(defn parse-conway [lines dims]
+(defn parse-conway [lines & {:keys [dims] :or {dims 2}}]
   (set
     (for [[y line] (map vector (range) lines)
           [x c]  (map vector (range) line)
@@ -46,7 +46,7 @@
   (iterate step alive))
 
 (defn ex1 [opts]
-  (println (count (nth (run (parse-conway (read-input) 3)) 6))))
+  (println (count (nth (run (parse-conway (read-input) :dims 3)) 6))))
 
 (defn ex2 [opts]
-  (println (count (nth (run (parse-conway (read-input) 4)) 6))))
+  (println (count (nth (run (parse-conway (read-input) :dims 4)) 6))))
