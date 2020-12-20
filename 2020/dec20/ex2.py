@@ -1,7 +1,5 @@
 
 import sys
-from pprint import pprint as pp
-from collections import Counter
 
 def parse_tiles(lines):
     tile_id = ""
@@ -138,13 +136,6 @@ def find_corner(tiles):
         if len(adjacent) == 2:
             return tile, adjacent
 
-def find_all_adjacent(tiles):
-    all_adjacent = []
-    for tile in tiles:
-        adjacent = tile.find_adjacent(tiles)
-        all_adjacent.append(adjacent)
-    return all_adjacent
-
 def build_grid(tiles):
     tiles = list(tiles)
     # find a corner
@@ -197,7 +188,7 @@ def build_grid(tiles):
                 else:
                     raise Exception("top/bottom orientation not found")
             else:
-                raise Exception("Shouldn't happen")
+                raise Exception("couldn't find the next tile.")
 
     return grid
 
