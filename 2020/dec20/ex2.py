@@ -209,10 +209,6 @@ def combine_grid(grid):
             lines.append("".join(row))
     return Tile(lines)
 
-
-
-
-
 def main():
     tiles = parse_tiles(sys.stdin)
     grid = build_grid(tiles)
@@ -237,15 +233,6 @@ def main():
         for point in sea_monster.points(*location):
             roughness.discard(point)
     print(len(roughness))
-
-
-
-
-def test():
-    tile = Tile(["AoB","ooo", "CoD"])
-    for o in tile.iter_orientations():
-        print(o)
-        print()
 
 
 if __name__ == "__main__":
