@@ -7,7 +7,6 @@ def read_input(input_str):
 class CupGame:
     def __init__(self, digits):
         self._digits = list(digits)
-        self._current_cup = 0
 
     def iterate(self):
         removed = self._remove()
