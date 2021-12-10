@@ -1,5 +1,6 @@
 import sys
 
+
 def main():
     map = Map()
     for pos, depth in parse_map(sys.stdin):
@@ -38,7 +39,6 @@ class Map:
 
         return cluster
 
-
     def _adjacent_exists(self, pos):
         for point in self._adjacent_points(pos):
             if point in self.positions:
@@ -61,6 +61,7 @@ def parse_map(lines):
 def parse_row(line):
     for n in line:
         yield int(n)
+
 
 if __name__ == "__main__":
     main()
